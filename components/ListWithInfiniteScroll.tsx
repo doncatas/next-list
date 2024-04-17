@@ -1,7 +1,9 @@
 "use client";
 
-import { createElement, ElementType, ReactNode, useMemo, useRef, useState } from 'react';
-import useInfiniteScroll from '@/app/hooks/useInfiniteScroll';
+import { createElement, ElementType, Fragment, useMemo, useState } from 'react';
+import useInfiniteScroll from '@/hooks/useInfiniteScroll';
+import AdCard from '@/components/AdCard';
+import { AD_UNIT_PATHS } from '@/consts';
 
 type Props<T> = {
   layout: ElementType;
@@ -14,10 +16,11 @@ type Props<T> = {
   canLoadMore: boolean;
   manualLoadPage: number;
   onLoadMore: () => void;
+  adBeforeIndex?: number;
 };
 
 const ListWithInfiniteScroll = <T extends { id: string },>(props: Props<T>) => {
-  const { layout, card, skeleton, data, page, perPage, isLoading, canLoadMore, manualLoadPage, onLoadMore } = props;
+  const { layout, card, skeleton, data, page, perPage, isLoading, canLoadMore, manualLoadPage, onLoadMore, adBeforeIndex } = props;
   // cia reik det ne i useRef, o i state, kad hookas viduj pasigautu containerio binda
   const [ref, setRef] = useState<HTMLDivElement | null>(null);
 
@@ -32,10 +35,21 @@ const ListWithInfiniteScroll = <T extends { id: string },>(props: Props<T>) => {
   return (
     <div className="w-full flex-1 flex flex-col items-center gap-4 p-4 overflow-y-auto">
       <div className="w-full flex-1 relative">
-        {createElement(layout, null, (<>
-          {(data ?? []).map(item => createElement(card, { key: `card-${item.id}`, data: item }))}
-          {isLoading && skeletonArray.map(key => createElement(skeleton, { key: `skeleton-${key}` }))}
-        </>))}
+        {createElement(layout, { key: 'layout' }, [
+          (data ?? []).map((item, index) => (
+            <Fragment key={`data-fragment-${item.id}`}>
+              {(index % perPage) === adBeforeIndex && !!AD_UNIT_PATHS[Math.floor(index / perPage)] && (
+                <AdCard
+                  key={`ad-card-${Math.floor(index / perPage)}`}
+                  slot={`infinite-scroll-ad-${Math.floor(index / perPage)}`}
+                  adUnitPath={AD_UNIT_PATHS[Math.floor(index / perPage)]}
+                />)
+              }
+              {createElement(card, {key: `card-${item.id}`, data: item})}
+            </Fragment>
+          )),
+          isLoading && skeletonArray.map(key => createElement(skeleton, { key: `skeleton-${key}` })),
+        ])}
         <div ref={setRef} className="absolute bottom-0 left-1/2 w-0 h-0 translate-x-1/2" />
       </div>
       {manualLoadPage === page && !isLoading && (

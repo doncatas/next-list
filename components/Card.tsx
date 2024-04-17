@@ -1,5 +1,5 @@
-import { TheCatApiV1ImagesSearchItem } from '@/app/types/api/thecatapi';
-import Image from "next/image";
+import { TheCatApiV1ImagesSearchItem } from '@/types/api/thecatapi';
+// import Image from "next/image";
 
 type Props = {
   data: TheCatApiV1ImagesSearchItem;
@@ -8,6 +8,7 @@ type Props = {
 const Card = (props: Props) => {
   const { data } = props;
 
+  {/** @description aspect-square nuemus tada visi pasistrechintu pagal adsa ar ilgiausia paveiksliuka, bet nzn ar to reikia */}
   return (
     <div className="aspect-square bg-white">
       <img

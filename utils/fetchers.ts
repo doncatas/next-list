@@ -1,4 +1,4 @@
-import { TheCatApiV1ImagesSearch } from '@/app/types/api/thecatapi';
+import { TheCatApiV1ImagesSearch } from '@/types/api/thecatapi';
 
 async function getData({ pageParam = 0 }: { pageParam: number }) {
   const options = {
@@ -9,7 +9,7 @@ async function getData({ pageParam = 0 }: { pageParam: number }) {
   };
   try {
     const params = new URLSearchParams({ page: pageParam.toString() });
-    const response = await fetch(`/api/thecatapi?${params.toString()}`, options).then((res) => {
+    const response = await fetch(`${process.env.URL ?? ''}/api/thecatapi?${params.toString()}`, options).then((res) => {
       if (res.ok) {
         return res.json();
       }

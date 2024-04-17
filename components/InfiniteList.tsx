@@ -1,14 +1,14 @@
 "use client";
 
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { getData } from '@/app/utils/fetchers';
+import { getData } from '@/utils/fetchers';
 import { useMemo } from 'react';
-import ListWithInfiniteScroll from '@/app/components/ListWithInfiniteScroll';
-import { TheCatApiV1ImagesSearchItem } from '@/app/types/api/thecatapi';
-import ListLayout from '@/app/components/ListLayout';
-import Card from '@/app/components/Card';
-import Skeleton from '@/app/components/Skeleton';
-import { LIMIT_PER_PAGE } from '@/app/consts';
+import ListWithInfiniteScroll from '@/components/ListWithInfiniteScroll';
+import { TheCatApiV1ImagesSearchItem } from '@/types/api/thecatapi';
+import ListLayout from '@/components/ListLayout';
+import Card from '@/components/Card';
+import Skeleton from '@/components/Skeleton';
+import { LIMIT_PER_PAGE } from '@/consts';
 
 const InfiniteList = () => {
   const { data, isFetching, isError, fetchNextPage, hasNextPage } = useInfiniteQuery({
@@ -55,6 +55,7 @@ const InfiniteList = () => {
            canLoadMore={hasNextPage}
            manualLoadPage={4}
            onLoadMore={fetchNextPage}
+           adBeforeIndex={3}
          />
        )}
    </>
